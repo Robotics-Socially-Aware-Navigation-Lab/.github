@@ -12,7 +12,7 @@ This work exemplifies advanced concepts in **object detection, scene understandi
 
 ## System Overview
 
-The SAN_Project Robot Production Pipeline is composed of interconnected modules, each serving a distinct purpose in the overall robot intelligence framework.
+The RSAN_Project Robot Production Pipeline is composed of interconnected modules, each serving a distinct purpose in the overall robot intelligence framework.
 
 1. **Data Collection & Cleaning**  
    - Gathers and refines real-world or simulated datasets (COCO, SUN RGB-D).  
