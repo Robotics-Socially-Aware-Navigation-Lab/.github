@@ -83,11 +83,11 @@ This layered design mirrors how humans combine **sight, reasoning, and decision-
 ---
 
 ## Project Contributors:
-# Professor:
+## Professor:
 - Dr Gurman Gill
-# Stakeholder:
+## Stakeholder:
 - Dr. Salek and her research team
-# Students:
+## Students:
 - Rolando Yax  
 - Kyle Garrity  
 - Jonathan Ramirez  
