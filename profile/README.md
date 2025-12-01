@@ -1,8 +1,8 @@
 # Welcome to the Robotics Socially Aware Navigation Lab (RSAN Lab)
 
-This organization was established to facilitate research and development in **socially aware robotic navigation**, combining **computer vision**, **machine learning**, and **robotic reasoning** to create context-aware autonomous systems.
+This group was established to facilitate research and development in **socially aware robotic navigation**, combining **computer vision**, **machine learning**, and **robotic reasoning** to create context-aware autonomous systems.
 
-The **RSAN_Project** is the flagship system developed for **CS470: Advanced Software Design Project** at **Sonoma State University**.  
+The **RSAN_Project** could be the forerunner system developed for **CS470: Advanced Software Design Project** at **Sonoma State University**.  
 This project represents a collaborative effort by a multidisciplinary team focused on the intersection of **AI perception**, **Large Language Models (LLMs)**, and **robotic navigation** using **ROS2**.  
 
 Through a modular, research-driven design, the system integrates perception, reasoning, and navigation to enable robots to interpret human-centric environments and respond appropriately.  
@@ -74,7 +74,7 @@ This layered design mirrors how humans combine **sight, reasoning, and decision-
 
 | Domain | Tool / Framework | Purpose |
 |--------|------------------|----------|
-| Computer Vision | **YOLOv9 / OpenCV** | Object detection and real-time inference |
+| Computer Vision | **YOLOv8 / OpenCV** | Object detection and real-time inference |
 | Dataset Management | **FiftyOne / Albumentations** | Data cleaning, augmentation, and visualization |
 | Reasoning | **ChatGPT-Vision / LangChain** | Semantic interpretation of detected scenes |
 | Robotics | **ROS2 (Humble)** | Real-world control and sensor integration |
@@ -82,7 +82,12 @@ This layered design mirrors how humans combine **sight, reasoning, and decision-
 
 ---
 
-## Project Contributors
+## Project Contributors:
+# Professor:
+- Dr Gurman Gill
+# Stakeholder:
+- Dr. Salek and her research team
+# Students:
 - Rolando Yax  
 - Kyle Garrity  
 - Jonathan Ramirez  
