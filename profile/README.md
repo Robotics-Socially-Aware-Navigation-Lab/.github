@@ -1,59 +1,148 @@
 # Welcome to the Robotics Socially Aware Navigation Lab (RSAN Lab)
 
-This group was established to facilitate research and development in **socially aware robotic navigation**, combining **computer vision**, **machine learning**, and **robotic reasoning** to create context-aware autonomous systems.
+This group was founded to advance research in **socially aware robotic perception**, combining **computer vision**, **indoor scene understanding**, 
+and **AI reasoning** to help robots behave intelligently in human environments.
 
-The **RSAN_Project** could be the forerunner system developed for **CS470: Advanced Software Design Project** at **Sonoma State University**.  
-This project represents a collaborative effort by a multidisciplinary team focused on the intersection of **AI perception**, **Large Language Models (LLMs)**, and **robotic navigation** using **ROS2**.  
+The **RSAN_Project** was developed for **CS470: Advanced Software Design Project** at **Sonoma State University**.  
+It integrates **YOLOv8 indoor object detection**, **indoor scene classification**, **hybrid fusion**, and **LLM reasoning**, producing a unified perception pipeline capable of interpreting complex indoor spaces.
 
-Through a modular, research-driven design, the system integrates perception, reasoning, and navigation to enable robots to interpret human-centric environments and respond appropriately.  
-This work exemplifies advanced concepts in **object detection, scene understanding, contextual inference, and behavior-based robotics**.
+The system is fully modular and research-oriented, enabling:
+
+- Indoor object detection  
+- Indoor room classification  
+- Hybrid scene refinement  
+- Symbolic + LLM reasoning  
+- Image, video, and webcam-based real-time perception  
 
 ---
 
-## System Overview
+# System Overview (RSAN Perception Pipeline)
 
-The RSAN_Project Robot Production Pipeline is composed of interconnected modules, each serving a distinct purpose in the overall robot intelligence framework.
+The RSAN pipeline consists of tightly integrated modules that work together from **data → trained models → reasoning → annotated outputs**.
 
-1. **Data Collection & Cleaning**  
-   - Gathers and refines real-world or simulated datasets (COCO, SUN RGB-D).  
-   - Processes image data to remove noise and ensure balanced training samples.  
-   - Implemented in:  
-     - `colab/preprocess_data.ipynb`  
-     - `src/perception/preprocess_data.py`
+---
 
-2. **Model Training (YOLOv9)**  
-   - Fine-tunes YOLOv9 on custom datasets for human-object interaction recognition.  
-   - Integrates social cues into object detection for contextual awareness.  
-   - Implemented in:  
-     - `colab/train_yolov9.ipynb`  
-     - `src/perception/train_yolo.py`
+## 1. Data Collection & Preprocessing
 
-3. **Visual Perception & Detection**  
-   - Runs trained models to detect people, objects, and obstacles in the environment.  
-   - Supports both static images and video streams for real-time inference.  
-   - Implemented in:  
-     - `src/perception/detect_objects.py`
+We collect and prepare data for **indoor object detection** and **indoor scene classification**.
 
-4. **LLM-Based Reasoning (ChatGPT-Vision Integration)**  
-   - Uses GPT models for scene interpretation and semantic reasoning.  
-   - Converts visual detections into natural language context for decision-making.  
-   - Implemented in:  
-     - `src/reasoning/llm_reasoner.py`  
-     - `src/reasoning/rule_engine.py`
+**Object Detection datasets:**
+- COCO (filtered to indoor classes)  
+- HomeObject3K  
+- Roboflow indoor datasets  
 
-5. **Navigation & Behavior Control (ROS2 Integration)**  
-   - Translates high-level reasoning into low-level motion commands.  
-   - Uses ROS2 topics to manage path planning and robot movement.  
-   - Implemented in:  
-     - `src/navigation/ros2_interface.py`  
-     - `src/navigation/san_behavior.py`
+**Scene Classification datasets:**
+- MIT Indoor Scenes  
+- Places365  
 
-6. **Evaluation & Documentation**  
-   - Tracks model performance and robot behavior metrics.  
-   - Produces reports, visualizations, and reproducible results.  
-   - Implemented in:  
-     - `docs/model_training.md`  
-     - `results/logs/`  
+After filtering indoor classes, we preprocess the data into YOLO-ready format.
+
+**Implemented in:**
+- `colab/preprocess_data.ipynb`  
+- `src/perception/preprocess_data.py`
+
+---
+
+## 2. Model Training
+
+### YOLOv8 Indoor Object Detection  
+Trains YOLOv8 on indoor-specific object classes (chair, bed, toilet, laptop, couch, etc.).
+
+Outputs include:
+- `best.pt`  
+- Training logs  
+- Confusion matrix  
+- Validation results  
+
+### Indoor Scene Classification (ResNet-Places365 Multi-Head)  
+Your real indoor classifier:
+
+### resnet_places365_best.pth
+
+This model contains:
+- ResNet50 backbone  
+- Places365 head  
+- MIT indoor scene classification head (used by RSAN)  
+
+**Implemented in:**
+- `colab/train_yolov8.ipynb`  
+- `colab/Places365_Detecting_Videos.ipynb`  
+- `src/reasoning/indoor_classifier.py`
+
+---
+
+## 3. Visual Perception (Object Detection + Scene Classification)
+
+### Indoor Object Detection  
+Runs YOLOv8 to detect indoor objects.
+
+Implemented in:
+- `src/perception/detect_objects.py`
+
+### Indoor Scene Classification  
+Runs in our ResNet multi-head classifier to classify indoor room type.
+
+Implemented in:
+- `src/reasoning/indoor_classifier.py`
+
+---
+
+## 4. Hybrid Scene Fusion (RSAN Innovation)
+
+RSAN refines indoor scene classification using detected objects.
+
+**Example:**  
+If the classifier predicts **“office”**, but YOLO detects **bed + pillow**,  
+Hybrid Fusion corrects it to **“bedroom.”**
+
+Implemented in:
+- `src/reasoning/scene_context.py`
+
+---
+
+## 5. Reasoning Layer (Symbolic + LLM)
+
+Two reasoning systems work together:
+
+### Rule-Based Reasoning  
+Produces short semantic summaries based on objects + room classification.  
+Used for:
+- Images  
+- Videos  
+- Webcam HUD  
+
+### LLM Reasoning (GPT-4o-Mini)  
+Used only when an API key is present.  
+Generates detailed natural-language understanding of the scene.
+
+Implemented in:
+- `src/reasoning/rule_engine.py`  
+- `src/reasoning/llm_reasoner.py`  
+
+Outputs stored in:
+- `outputs/reasoning_output.txt`  
+- `outputs/full_pipeline/logs/results.json`  
+
+---
+
+## 6. Full Unified Pipeline
+
+Combines:
+- YOLOv8 object detection  
+- Indoor classifier  
+- Hybrid fusion  
+- Rule-based + LLM reasoning  
+- Annotated overlays  
+
+Implemented in:
+- `src/tools/run_unified_pipeline.py`
+
+Supports:
+- Images  
+- Videos  
+- Webcam  
+
+Outputs stored in: The outputs files, images, videos and result.json
 
 ---
 
@@ -70,18 +159,18 @@ This layered design mirrors how humans combine **sight, reasoning, and decision-
 
 ---
 
-## Technologies and Frameworks
+# Technologies Used
 
-| Domain | Tool / Framework | Purpose |
-|--------|------------------|----------|
-| Computer Vision | **YOLOv8 / OpenCV** | Object detection and real-time inference |
-| Dataset Management | **FiftyOne / Albumentations** | Data cleaning, augmentation, and visualization |
-| Reasoning | **ChatGPT-Vision / LangChain** | Semantic interpretation of detected scenes |
-| Robotics | **ROS2 (Humble)** | Real-world control and sensor integration |
-| ML Workflow | **Python, PyTorch, Jupyter, Colab** | Model training and experimentation |
+| Area | Tools |
+|------|-------|
+| Object Detection | YOLOv8 + OpenCV |
+| Indoor Scene Classification | ResNet-Places365 Multi-Head |
+| Hybrid Fusion | Custom Python logic |
+| Reasoning | Rule-Based + GPT-4o-Mini |
+| ML & Training | PyTorch, Jupyter, Colab |
+| Environment | Conda, pip, environment.yml |
 
 ---
-
 ## Project Contributors:
 ## Professor:
 - Dr Gurman Gill
@@ -92,3 +181,4 @@ This layered design mirrors how humans combine **sight, reasoning, and decision-
 - Kyle Garrity  
 - Jonathan Ramirez  
 - Gurkirat Sandhu
+
